@@ -29,6 +29,7 @@ export interface Route {
   stops: Stop[];
   startTime: string;
   dropTime: string;
+  direction: 'to_college' | 'from_college';
   collegeLocation: {
     lat: number;
     lng: number;

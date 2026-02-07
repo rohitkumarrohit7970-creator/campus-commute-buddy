@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Bus, Calendar, MapPin, Clock, Ticket } from 'lucide-react';
+import { Bus, Calendar, MapPin, Clock, Ticket, ArrowRightLeft } from 'lucide-react';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { StatCard } from '@/components/dashboard/StatCard';
 import { BusCard } from '@/components/bus/BusCard';
@@ -11,6 +11,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { getRecommendedBuses, mockRoutes, mockBookings, getBusesWithDetails } from '@/data/mockData';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
@@ -21,8 +22,10 @@ const StudentDashboard = () => {
   const [bookingDialog, setBookingDialog] = useState(false);
   const [selectedBus, setSelectedBus] = useState<any>(null);
   const [selectedStop, setSelectedStop] = useState('');
+  const [direction, setDirection] = useState<'to_college' | 'from_college'>('to_college');
 
   const allBuses = getBusesWithDetails();
+  const filteredRoutes = mockRoutes.filter(r => r.direction === direction);
   const recommendedBuses = selectedRoute ? getRecommendedBuses(selectedRoute) : [];
   const myBooking = mockBookings.find(b => b.studentId === user?.id && b.status === 'active');
 
@@ -106,6 +109,20 @@ const StudentDashboard = () => {
             </CardTitle>
           </CardHeader>
           <CardContent>
+            {/* Direction Toggle */}
+            <Tabs value={direction} onValueChange={(v) => { setDirection(v as 'to_college' | 'from_college'); setSelectedRoute(''); }} className="mb-6">
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="to_college" className="gap-2">
+                  <ArrowRightLeft className="h-4 w-4" />
+                  To College (Morning)
+                </TabsTrigger>
+                <TabsTrigger value="from_college" className="gap-2">
+                  <ArrowRightLeft className="h-4 w-4" />
+                  From College (Evening)
+                </TabsTrigger>
+              </TabsList>
+            </Tabs>
+
             <div className="mb-6">
               <Label>Select Your Route</Label>
               <Select value={selectedRoute} onValueChange={setSelectedRoute}>
@@ -113,7 +130,7 @@ const StudentDashboard = () => {
                   <SelectValue placeholder="Choose a route to see available buses" />
                 </SelectTrigger>
                 <SelectContent>
-                  {mockRoutes.map(route => (
+                  {filteredRoutes.map(route => (
                     <SelectItem key={route.id} value={route.id}>
                       {route.name} ({route.startTime} - {route.dropTime})
                     </SelectItem>
@@ -149,6 +166,8 @@ const StudentDashboard = () => {
                       <RouteTimeline 
                         stops={mockRoutes.find(r => r.id === selectedRoute)?.stops || []}
                         dropTime={mockRoutes.find(r => r.id === selectedRoute)?.dropTime || ''}
+                        startTime={mockRoutes.find(r => r.id === selectedRoute)?.startTime || ''}
+                        direction={direction}
                       />
                     </CardContent>
                   </Card>

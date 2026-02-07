@@ -71,56 +71,169 @@ export const mockStops: Stop[] = [
   { id: 's37', name: 'Dakpathar', pickupTime: '07:20', order: 3, location: { lat: 30.3800, lng: 77.8900 } },
 ];
 
+// Return stops (GEU to drop points - reversed order with evening times)
+export const mockReturnStops: Stop[] = [
+  // Return Route A
+  { id: 'rs1', name: 'Rispana Bridge', pickupTime: '16:15', order: 1, location: { lat: 30.2847, lng: 78.0156 } },
+  { id: 'rs2', name: 'ISBT Dehradun', pickupTime: '16:30', order: 2, location: { lat: 30.2986, lng: 78.0268 } },
+  { id: 'rs3', name: 'Paltan Bazaar', pickupTime: '16:40', order: 3, location: { lat: 30.3189, lng: 78.0361 } },
+  { id: 'rs4', name: 'Clock Tower', pickupTime: '16:50', order: 4, location: { lat: 30.3165, lng: 78.0322 } },
+
+  // Return Route B
+  { id: 'rs5', name: 'EC Road Crossing', pickupTime: '16:15', order: 1, location: { lat: 30.2920, lng: 78.0200 } },
+  { id: 'rs6', name: 'Survey Chowk', pickupTime: '16:25', order: 2, location: { lat: 30.3078, lng: 78.0312 } },
+  { id: 'rs7', name: 'Pacific Mall', pickupTime: '16:35', order: 3, location: { lat: 30.3312, lng: 78.0423 } },
+  { id: 'rs8', name: 'Rajpur Road (Doon Hospital)', pickupTime: '16:45', order: 4, location: { lat: 30.3456, lng: 78.0534 } },
+
+  // Return Route C
+  { id: 'rs9', name: 'FRI Gate', pickupTime: '16:10', order: 1, location: { lat: 30.2634, lng: 78.0078 } },
+  { id: 'rs10', name: 'Niranjanpur', pickupTime: '16:20', order: 2, location: { lat: 30.2712, lng: 78.0023 } },
+  { id: 'rs11', name: 'Prem Nagar', pickupTime: '16:30', order: 3, location: { lat: 30.2789, lng: 77.9956 } },
+
+  // Return Route D
+  { id: 'rs12', name: 'Ballupur Chowk', pickupTime: '16:10', order: 1, location: { lat: 30.2800, lng: 78.0350 } },
+  { id: 'rs13', name: 'Shimla Bypass Crossing', pickupTime: '16:20', order: 2, location: { lat: 30.2750, lng: 78.0450 } },
+  { id: 'rs14', name: 'Nepali Farm', pickupTime: '16:30', order: 3, location: { lat: 30.2700, lng: 78.0580 } },
+  { id: 'rs15', name: 'Mothrowala', pickupTime: '16:40', order: 4, location: { lat: 30.2650, lng: 78.0700 } },
+
+  // Return Route E
+  { id: 'rs16', name: 'ONGC Chowk', pickupTime: '16:15', order: 1, location: { lat: 30.3200, lng: 78.0380 } },
+  { id: 'rs17', name: 'Sahastradhara Road', pickupTime: '16:25', order: 2, location: { lat: 30.3400, lng: 78.0450 } },
+  { id: 'rs18', name: 'Kulhan', pickupTime: '16:35', order: 3, location: { lat: 30.3600, lng: 78.0500 } },
+  { id: 'rs19', name: 'Malsi Deer Park', pickupTime: '16:50', order: 4, location: { lat: 30.3800, lng: 78.0600 } },
+
+  // Return Route F
+  { id: 'rs20', name: 'Harrawala', pickupTime: '16:10', order: 1, location: { lat: 30.2450, lng: 78.0500 } },
+  { id: 'rs21', name: 'Banjarawala', pickupTime: '16:20', order: 2, location: { lat: 30.2300, lng: 78.0700 } },
+  { id: 'rs22', name: 'Raipur', pickupTime: '16:35', order: 3, location: { lat: 30.2100, lng: 78.0900 } },
+  { id: 'rs23', name: 'Doiwala', pickupTime: '16:50', order: 4, location: { lat: 30.1800, lng: 78.1200 } },
+
+  // Return Route G
+  { id: 'rs24', name: 'Majra', pickupTime: '16:15', order: 1, location: { lat: 30.3000, lng: 77.9700 } },
+  { id: 'rs25', name: 'Vikasnagar Mod', pickupTime: '16:30', order: 2, location: { lat: 30.3200, lng: 77.9400 } },
+  { id: 'rs26', name: 'Bhagwanpur', pickupTime: '16:45', order: 3, location: { lat: 30.3400, lng: 77.9000 } },
+  { id: 'rs27', name: 'Selaqui', pickupTime: '17:00', order: 4, location: { lat: 30.3700, lng: 77.8600 } },
+
+  // Return Route H
+  { id: 'rs28', name: 'Dharampur', pickupTime: '16:10', order: 1, location: { lat: 30.2900, lng: 78.0000 } },
+  { id: 'rs29', name: 'Raipur Road Crossing', pickupTime: '16:20', order: 2, location: { lat: 30.3100, lng: 77.9900 } },
+  { id: 'rs30', name: 'Kaulagarh', pickupTime: '16:30', order: 3, location: { lat: 30.3350, lng: 77.9800 } },
+
+  // Return Route I
+  { id: 'rs31', name: 'Lachhiwala', pickupTime: '16:15', order: 1, location: { lat: 30.2000, lng: 78.1300 } },
+  { id: 'rs32', name: 'Shyampur', pickupTime: '16:30', order: 2, location: { lat: 30.1500, lng: 78.1800 } },
+  { id: 'rs33', name: 'Raiwala', pickupTime: '16:50', order: 3, location: { lat: 30.1100, lng: 78.2300 } },
+  { id: 'rs34', name: 'Rishikesh Bus Stand', pickupTime: '17:10', order: 4, location: { lat: 30.0869, lng: 78.2676 } },
+
+  // Return Route J
+  { id: 'rs35', name: 'Dakpathar', pickupTime: '16:15', order: 1, location: { lat: 30.3800, lng: 77.8900 } },
+  { id: 'rs36', name: 'Kalsi', pickupTime: '16:35', order: 2, location: { lat: 30.4000, lng: 77.8400 } },
+  { id: 'rs37', name: 'Herbertpur', pickupTime: '16:55', order: 3, location: { lat: 30.3900, lng: 77.7800 } },
+];
+
 export const mockRoutes: Route[] = [
+  // === MORNING: To College ===
   {
     id: 'r1', name: 'Route A - Clock Tower / City Center to GEU',
     stops: [mockStops[0], mockStops[1], mockStops[2], mockStops[3]],
-    startTime: '07:00', dropTime: '08:00', collegeLocation: COLLEGE_LOCATION,
+    startTime: '07:00', dropTime: '08:00', direction: 'to_college', collegeLocation: COLLEGE_LOCATION,
   },
   {
     id: 'r2', name: 'Route B - Rajpur Road to GEU',
     stops: [mockStops[4], mockStops[5], mockStops[6], mockStops[7]],
-    startTime: '07:10', dropTime: '08:05', collegeLocation: COLLEGE_LOCATION,
+    startTime: '07:10', dropTime: '08:05', direction: 'to_college', collegeLocation: COLLEGE_LOCATION,
   },
   {
     id: 'r3', name: 'Route C - Prem Nagar / FRI to GEU',
     stops: [mockStops[8], mockStops[9], mockStops[10]],
-    startTime: '07:15', dropTime: '07:55', collegeLocation: COLLEGE_LOCATION,
+    startTime: '07:15', dropTime: '07:55', direction: 'to_college', collegeLocation: COLLEGE_LOCATION,
   },
   {
     id: 'r4', name: 'Route D - Haridwar Road to GEU',
     stops: [mockStops[11], mockStops[12], mockStops[13], mockStops[14]],
-    startTime: '07:00', dropTime: '07:55', collegeLocation: COLLEGE_LOCATION,
+    startTime: '07:00', dropTime: '07:55', direction: 'to_college', collegeLocation: COLLEGE_LOCATION,
   },
   {
     id: 'r5', name: 'Route E - Mussoorie Road / Malsi to GEU',
     stops: [mockStops[15], mockStops[16], mockStops[17], mockStops[18]],
-    startTime: '07:05', dropTime: '08:05', collegeLocation: COLLEGE_LOCATION,
+    startTime: '07:05', dropTime: '08:05', direction: 'to_college', collegeLocation: COLLEGE_LOCATION,
   },
   {
     id: 'r6', name: 'Route F - Doiwala / Raipur to GEU',
     stops: [mockStops[19], mockStops[20], mockStops[21], mockStops[22]],
-    startTime: '06:50', dropTime: '07:50', collegeLocation: COLLEGE_LOCATION,
+    startTime: '06:50', dropTime: '07:50', direction: 'to_college', collegeLocation: COLLEGE_LOCATION,
   },
   {
     id: 'r7', name: 'Route G - Selaqui / Saharanpur Road to GEU',
     stops: [mockStops[23], mockStops[24], mockStops[25], mockStops[26]],
-    startTime: '06:55', dropTime: '08:00', collegeLocation: COLLEGE_LOCATION,
+    startTime: '06:55', dropTime: '08:00', direction: 'to_college', collegeLocation: COLLEGE_LOCATION,
   },
   {
     id: 'r8', name: 'Route H - Chakrata Road to GEU',
     stops: [mockStops[27], mockStops[28], mockStops[29]],
-    startTime: '07:10', dropTime: '07:55', collegeLocation: COLLEGE_LOCATION,
+    startTime: '07:10', dropTime: '07:55', direction: 'to_college', collegeLocation: COLLEGE_LOCATION,
   },
   {
     id: 'r9', name: 'Route I - Rishikesh to GEU',
     stops: [mockStops[30], mockStops[31], mockStops[32], mockStops[33]],
-    startTime: '06:40', dropTime: '08:00', collegeLocation: COLLEGE_LOCATION,
+    startTime: '06:40', dropTime: '08:00', direction: 'to_college', collegeLocation: COLLEGE_LOCATION,
   },
   {
     id: 'r10', name: 'Route J - Herbertpur / Kalsi to GEU',
     stops: [mockStops[34], mockStops[35], mockStops[36]],
-    startTime: '06:45', dropTime: '07:55', collegeLocation: COLLEGE_LOCATION,
+    startTime: '06:45', dropTime: '07:55', direction: 'to_college', collegeLocation: COLLEGE_LOCATION,
+  },
+
+  // === EVENING: From College ===
+  {
+    id: 'r11', name: 'Route A - GEU to Clock Tower / City Center',
+    stops: [mockReturnStops[0], mockReturnStops[1], mockReturnStops[2], mockReturnStops[3]],
+    startTime: '16:00', dropTime: '16:50', direction: 'from_college', collegeLocation: COLLEGE_LOCATION,
+  },
+  {
+    id: 'r12', name: 'Route B - GEU to Rajpur Road',
+    stops: [mockReturnStops[4], mockReturnStops[5], mockReturnStops[6], mockReturnStops[7]],
+    startTime: '16:00', dropTime: '16:45', direction: 'from_college', collegeLocation: COLLEGE_LOCATION,
+  },
+  {
+    id: 'r13', name: 'Route C - GEU to Prem Nagar / FRI',
+    stops: [mockReturnStops[8], mockReturnStops[9], mockReturnStops[10]],
+    startTime: '16:00', dropTime: '16:30', direction: 'from_college', collegeLocation: COLLEGE_LOCATION,
+  },
+  {
+    id: 'r14', name: 'Route D - GEU to Haridwar Road',
+    stops: [mockReturnStops[11], mockReturnStops[12], mockReturnStops[13], mockReturnStops[14]],
+    startTime: '16:00', dropTime: '16:40', direction: 'from_college', collegeLocation: COLLEGE_LOCATION,
+  },
+  {
+    id: 'r15', name: 'Route E - GEU to Mussoorie Road / Malsi',
+    stops: [mockReturnStops[15], mockReturnStops[16], mockReturnStops[17], mockReturnStops[18]],
+    startTime: '16:00', dropTime: '16:50', direction: 'from_college', collegeLocation: COLLEGE_LOCATION,
+  },
+  {
+    id: 'r16', name: 'Route F - GEU to Doiwala / Raipur',
+    stops: [mockReturnStops[19], mockReturnStops[20], mockReturnStops[21], mockReturnStops[22]],
+    startTime: '16:00', dropTime: '16:50', direction: 'from_college', collegeLocation: COLLEGE_LOCATION,
+  },
+  {
+    id: 'r17', name: 'Route G - GEU to Selaqui / Saharanpur Road',
+    stops: [mockReturnStops[23], mockReturnStops[24], mockReturnStops[25], mockReturnStops[26]],
+    startTime: '16:00', dropTime: '17:00', direction: 'from_college', collegeLocation: COLLEGE_LOCATION,
+  },
+  {
+    id: 'r18', name: 'Route H - GEU to Chakrata Road',
+    stops: [mockReturnStops[27], mockReturnStops[28], mockReturnStops[29]],
+    startTime: '16:00', dropTime: '16:30', direction: 'from_college', collegeLocation: COLLEGE_LOCATION,
+  },
+  {
+    id: 'r19', name: 'Route I - GEU to Rishikesh',
+    stops: [mockReturnStops[30], mockReturnStops[31], mockReturnStops[32], mockReturnStops[33]],
+    startTime: '16:00', dropTime: '17:10', direction: 'from_college', collegeLocation: COLLEGE_LOCATION,
+  },
+  {
+    id: 'r20', name: 'Route J - GEU to Herbertpur / Kalsi',
+    stops: [mockReturnStops[34], mockReturnStops[35], mockReturnStops[36]],
+    startTime: '16:00', dropTime: '16:55', direction: 'from_college', collegeLocation: COLLEGE_LOCATION,
   },
 ];
 
