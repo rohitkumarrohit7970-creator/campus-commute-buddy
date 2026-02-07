@@ -23,13 +23,15 @@ export interface Bus {
   isActive: boolean;
 }
 
+export type RouteDirection = 'morning_to_college' | 'afternoon_from_college' | 'afternoon_to_college' | 'afternoon_drop_from_college';
+
 export interface Route {
   id: string;
   name: string;
   stops: Stop[];
   startTime: string;
   dropTime: string;
-  direction: 'to_college' | 'from_college';
+  direction: RouteDirection;
   collegeLocation: {
     lat: number;
     lng: number;
