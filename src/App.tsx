@@ -7,6 +7,11 @@ import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminBuses from "./pages/admin/AdminBuses";
+import AdminRoutes from "./pages/admin/AdminRoutes";
+import AdminStudents from "./pages/admin/AdminStudents";
+import AdminDrivers from "./pages/admin/AdminDrivers";
+import AdminSchedule from "./pages/admin/AdminSchedule";
 import StudentDashboard from "./pages/student/StudentDashboard";
 import BookSeat from "./pages/student/BookSeat";
 import MyBooking from "./pages/student/MyBooking";
@@ -57,9 +62,29 @@ const AppRoutes = () => {
           <AdminDashboard />
         </ProtectedRoute>
       } />
-      <Route path="/admin/*" element={
+      <Route path="/admin/buses" element={
         <ProtectedRoute allowedRoles={['admin']}>
-          <AdminDashboard />
+          <AdminBuses />
+        </ProtectedRoute>
+      } />
+      <Route path="/admin/routes" element={
+        <ProtectedRoute allowedRoles={['admin']}>
+          <AdminRoutes />
+        </ProtectedRoute>
+      } />
+      <Route path="/admin/students" element={
+        <ProtectedRoute allowedRoles={['admin']}>
+          <AdminStudents />
+        </ProtectedRoute>
+      } />
+      <Route path="/admin/drivers" element={
+        <ProtectedRoute allowedRoles={['admin']}>
+          <AdminDrivers />
+        </ProtectedRoute>
+      } />
+      <Route path="/admin/schedule" element={
+        <ProtectedRoute allowedRoles={['admin']}>
+          <AdminSchedule />
         </ProtectedRoute>
       } />
       
