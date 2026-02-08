@@ -8,6 +8,9 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import StudentDashboard from "./pages/student/StudentDashboard";
+import BookSeat from "./pages/student/BookSeat";
+import MyBooking from "./pages/student/MyBooking";
+import TrackBus from "./pages/student/TrackBus";
 import DriverDashboard from "./pages/driver/DriverDashboard";
 
 const queryClient = new QueryClient();
@@ -66,9 +69,19 @@ const AppRoutes = () => {
           <StudentDashboard />
         </ProtectedRoute>
       } />
-      <Route path="/student/*" element={
+      <Route path="/student/book" element={
         <ProtectedRoute allowedRoles={['student']}>
-          <StudentDashboard />
+          <BookSeat />
+        </ProtectedRoute>
+      } />
+      <Route path="/student/booking" element={
+        <ProtectedRoute allowedRoles={['student']}>
+          <MyBooking />
+        </ProtectedRoute>
+      } />
+      <Route path="/student/track" element={
+        <ProtectedRoute allowedRoles={['student']}>
+          <TrackBus />
         </ProtectedRoute>
       } />
       
