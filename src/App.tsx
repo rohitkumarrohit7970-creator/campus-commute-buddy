@@ -17,6 +17,8 @@ import BookSeat from "./pages/student/BookSeat";
 import MyBooking from "./pages/student/MyBooking";
 import TrackBus from "./pages/student/TrackBus";
 import DriverDashboard from "./pages/driver/DriverDashboard";
+import DriverRoute from "./pages/driver/DriverRoute";
+import DriverSchedule from "./pages/driver/DriverSchedule";
 
 const queryClient = new QueryClient();
 
@@ -116,9 +118,14 @@ const AppRoutes = () => {
           <DriverDashboard />
         </ProtectedRoute>
       } />
-      <Route path="/driver/*" element={
+      <Route path="/driver/route" element={
         <ProtectedRoute allowedRoles={['driver']}>
-          <DriverDashboard />
+          <DriverRoute />
+        </ProtectedRoute>
+      } />
+      <Route path="/driver/schedule" element={
+        <ProtectedRoute allowedRoles={['driver']}>
+          <DriverSchedule />
         </ProtectedRoute>
       } />
       

@@ -10,9 +10,14 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { mockRoutes, mockBuses, mockUsers } from '@/data/mockData';
 import { useAuth } from '@/contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
+import { useState } from 'react';
 
 const DriverDashboard = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
+  const [isNavigating, setIsNavigating] = useState(false);
   
   // Find the bus assigned to this driver
   const assignedBus = mockBuses.find(b => b.driverId === user?.id) || mockBuses[0];
@@ -71,9 +76,22 @@ const DriverDashboard = () => {
                   <MapPin className="h-5 w-5 text-primary" />
                   Your Route Map
                 </CardTitle>
-                <Button variant="outline" size="sm">
+                <Button 
+                  variant={isNavigating ? "destructive" : "outline"} 
+                  size="sm"
+                  onClick={() => {
+                    if (!isNavigating && route?.stops.length) {
+                      const firstStop = route.stops[0];
+                      window.open(`https://www.google.com/maps/dir/?api=1&destination=${firstStop.location.lat},${firstStop.location.lng}&travelmode=driving`, '_blank');
+                      toast.success('Navigation started! Google Maps opened.');
+                    } else {
+                      toast.info('Navigation stopped.');
+                    }
+                    setIsNavigating(prev => !prev);
+                  }}
+                >
                   <Navigation className="h-4 w-4 mr-2" />
-                  Start Navigation
+                  {isNavigating ? 'Stop Navigation' : 'Start Navigation'}
                 </Button>
               </CardHeader>
               <CardContent>
