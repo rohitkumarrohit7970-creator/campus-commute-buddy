@@ -224,6 +224,7 @@ const Index = () => {
             </CardContent>
           </Card>
         </motion.div>
+        </div>
       </div>
     </div>
   );
