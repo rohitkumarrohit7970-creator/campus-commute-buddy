@@ -61,9 +61,32 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Hero Section */}
-      <div className="gradient-hero text-primary-foreground py-20 px-4">
-        <div className="container mx-auto">
+      {/* Hero Section with Video Background */}
+      <div className="relative text-primary-foreground py-20 px-4 overflow-hidden min-h-[70vh] flex items-center">
+        {/* Video Background */}
+        <div className="absolute inset-0 z-0">
+          <iframe
+            src="https://www.youtube.com/embed/XuW9Yc6Ow2E?autoplay=1&mute=1&loop=1&playlist=XuW9Yc6Ow2E&controls=0&showinfo=0&modestbranding=1&rel=0&playsinline=1"
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200%] h-[200%] min-w-full min-h-full pointer-events-none"
+            style={{ border: 'none' }}
+            allow="autoplay; encrypted-media"
+            allowFullScreen
+            title="Graphic Era Campus Video"
+          />
+          {/* Dark overlay for readability */}
+          <div className="absolute inset-0 bg-foreground/70" />
+        </div>
+
+        {/* Logo - Top Left */}
+        <div className="absolute top-4 left-4 z-20">
+          <img
+            src="/images/graphic-era-logo.webp"
+            alt="Graphic Era University Logo"
+            className="h-12 md:h-16 w-auto brightness-0 invert"
+          />
+        </div>
+
+        <div className="container mx-auto relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
