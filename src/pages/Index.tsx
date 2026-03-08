@@ -137,7 +137,7 @@ const Index = () => {
             alt="Graphic Era University Campus"
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-background/80 backdrop-blur-sm" />
+          <div className="absolute inset-0 bg-background/50" />
         </div>
         <div className="container mx-auto px-4 -mt-8 relative z-10 pt-8">
         <motion.div
