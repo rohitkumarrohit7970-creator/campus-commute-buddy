@@ -129,8 +129,17 @@ const Index = () => {
         </div>
       </div>
 
-      {/* Login Section */}
-      <div className="container mx-auto px-4 -mt-8 relative z-10 pb-16">
+      {/* Login Section with Campus Background */}
+      <div className="relative pb-16">
+        <div className="absolute inset-0 z-0">
+          <img
+            src="/images/geu-campus.jpg"
+            alt="Graphic Era University Campus"
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-background/80 backdrop-blur-sm" />
+        </div>
+        <div className="container mx-auto px-4 -mt-8 relative z-10 pt-8">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -215,6 +224,7 @@ const Index = () => {
             </CardContent>
           </Card>
         </motion.div>
+        </div>
       </div>
     </div>
   );
