@@ -80,9 +80,9 @@ const Index = () => {
         {/* Logo - Top Left */}
         <div className="absolute top-4 left-4 z-20">
           <img
-            src="/images/graphic-era-logo.webp"
+            src="/images/graphic-era-logo-new.jpeg"
             alt="Graphic Era University Logo"
-            className="h-12 md:h-16 w-auto brightness-0 invert"
+            className="h-14 md:h-20 w-auto rounded-full"
           />
         </div>
 
