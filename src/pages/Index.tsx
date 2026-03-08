@@ -81,8 +81,8 @@ const Index = () => {
         <div className="absolute top-4 left-4 z-20">
           <img
             src="/images/graphic-era-logo-new.jpeg"
-            alt="Graphic Era University Logo"
-            className="h-14 md:h-20 w-auto rounded-full"
+            alt="Graphic Era Deemed to be University"
+            className="h-12 md:h-16 w-auto drop-shadow-lg"
           />
         </div>
 
