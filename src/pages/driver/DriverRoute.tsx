@@ -15,6 +15,8 @@ import { useDriverLocation } from '@/hooks/useDriverLocation';
 const DriverRoute = () => {
   const { user } = useAuth();
   const [isNavigating, setIsNavigating] = useState(false);
+  const [isSharingLocation, setIsSharingLocation] = useState(false);
+  const { currentLocation } = useDriverLocation(isSharingLocation);
 
   const assignedBus = mockBuses.find(b => b.driverId === user?.id) || mockBuses[0];
   const route = mockRoutes.find(r => r.id === assignedBus.routeId);
