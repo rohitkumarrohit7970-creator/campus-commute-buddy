@@ -10,6 +10,7 @@ import { mockRoutes, mockBuses } from '@/data/mockData';
 import { useAuth } from '@/contexts/AuthContext';
 import { useState } from 'react';
 import { toast } from 'sonner';
+import { useDriverLocation } from '@/hooks/useDriverLocation';
 
 const DriverRoute = () => {
   const { user } = useAuth();
