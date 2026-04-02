@@ -86,6 +86,16 @@ const TrackBus = () => {
                   </div>
                 </CardHeader>
                 <CardContent className="space-y-3">
+                  {/* Real-time location indicator */}
+                  {selectedBus.driverId && driverLocations[selectedBus.driverId] && (
+                    <div className="flex items-center gap-2 text-sm p-2 bg-success/10 rounded-lg">
+                      <Radio className="h-4 w-4 text-success animate-pulse" />
+                      <span className="font-medium text-success">Live Location Active</span>
+                      <span className="text-xs text-muted-foreground ml-auto">
+                        Updated {new Date(driverLocations[selectedBus.driverId].updated_at).toLocaleTimeString()}
+                      </span>
+                    </div>
+                  )}
                   <div className="flex items-center gap-2 text-sm">
                     <MapPin className="h-4 w-4 text-muted-foreground" />
                     <span className="text-muted-foreground">Route:</span>
