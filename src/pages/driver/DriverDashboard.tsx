@@ -37,7 +37,8 @@ const DriverDashboard = () => {
             <h1 className="text-3xl font-bold">Driver Dashboard</h1>
             <p className="text-muted-foreground">Welcome, {user?.name}</p>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 items-center">
+            <NotificationBell />
             <Button
               variant={isSharingLocation ? "destructive" : "default"}
               onClick={() => {
