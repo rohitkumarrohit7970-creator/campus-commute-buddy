@@ -13,11 +13,14 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { useState } from 'react';
+import { useDriverLocation } from '@/hooks/useDriverLocation';
 
 const DriverDashboard = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [isNavigating, setIsNavigating] = useState(false);
+  const [isSharingLocation, setIsSharingLocation] = useState(false);
+  const { currentLocation } = useDriverLocation(isSharingLocation);
   
   // Find the bus assigned to this driver
   const assignedBus = mockBuses.find(b => b.driverId === user?.id) || mockBuses[0];
