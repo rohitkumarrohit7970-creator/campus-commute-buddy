@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { MapPin, Bus, Clock, Users } from 'lucide-react';
+import React, { useState, useMemo } from 'react';
+import { MapPin, Bus, Clock, Users, Radio } from 'lucide-react';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { BusMap } from '@/components/map/BusMap';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -8,12 +8,20 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Label } from '@/components/ui/label';
 import { getBusesWithDetails } from '@/data/mockData';
 import { cn } from '@/lib/utils';
+import { useRealtimeDriverLocation } from '@/hooks/useRealtimeDriverLocation';
 
 const TrackBus = () => {
   const allBuses = getBusesWithDetails();
   const activeBuses = allBuses.filter(b => b.isActive);
   const [selectedBusId, setSelectedBusId] = useState('');
   const selectedBus = activeBuses.find(b => b.id === selectedBusId);
+
+  // Get driver IDs for real-time location tracking
+  const driverIds = useMemo(() => 
+    activeBuses.map(b => b.driverId).filter(Boolean) as string[], 
+    [activeBuses]
+  );
+  const driverLocations = useRealtimeDriverLocation(driverIds);
 
   return (
     <DashboardLayout>
@@ -78,6 +86,16 @@ const TrackBus = () => {
                   </div>
                 </CardHeader>
                 <CardContent className="space-y-3">
+                  {/* Real-time location indicator */}
+                  {selectedBus.driverId && driverLocations[selectedBus.driverId] && (
+                    <div className="flex items-center gap-2 text-sm p-2 bg-success/10 rounded-lg">
+                      <Radio className="h-4 w-4 text-success animate-pulse" />
+                      <span className="font-medium text-success">Live Location Active</span>
+                      <span className="text-xs text-muted-foreground ml-auto">
+                        Updated {new Date(driverLocations[selectedBus.driverId].updated_at).toLocaleTimeString()}
+                      </span>
+                    </div>
+                  )}
                   <div className="flex items-center gap-2 text-sm">
                     <MapPin className="h-4 w-4 text-muted-foreground" />
                     <span className="text-muted-foreground">Route:</span>

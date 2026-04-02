@@ -10,10 +10,13 @@ import { mockRoutes, mockBuses } from '@/data/mockData';
 import { useAuth } from '@/contexts/AuthContext';
 import { useState } from 'react';
 import { toast } from 'sonner';
+import { useDriverLocation } from '@/hooks/useDriverLocation';
 
 const DriverRoute = () => {
   const { user } = useAuth();
   const [isNavigating, setIsNavigating] = useState(false);
+  const [isSharingLocation, setIsSharingLocation] = useState(false);
+  const { currentLocation } = useDriverLocation(isSharingLocation);
 
   const assignedBus = mockBuses.find(b => b.driverId === user?.id) || mockBuses[0];
   const route = mockRoutes.find(r => r.id === assignedBus.routeId);
@@ -42,14 +45,30 @@ const DriverRoute = () => {
             <h1 className="text-3xl font-bold">My Route</h1>
             <p className="text-muted-foreground">{route?.name || 'No route assigned'}</p>
           </div>
-          <Button 
-            onClick={handleStartNavigation}
-            className={isNavigating ? 'bg-destructive hover:bg-destructive/90' : ''}
-            size="lg"
-          >
-            <Navigation className="h-5 w-5 mr-2" />
-            {isNavigating ? 'Stop Navigation' : 'Start Navigation'}
-          </Button>
+          <div className="flex gap-2">
+            <Button
+              variant={isSharingLocation ? "destructive" : "default"}
+              onClick={() => {
+                setIsSharingLocation(prev => !prev);
+                if (!isSharingLocation) {
+                  toast.success('Location sharing started!');
+                } else {
+                  toast.info('Location sharing stopped.');
+                }
+              }}
+            >
+              <MapPin className="h-5 w-5 mr-2" />
+              {isSharingLocation ? 'Stop Sharing' : 'Share Location'}
+            </Button>
+            <Button 
+              onClick={handleStartNavigation}
+              className={isNavigating ? 'bg-destructive hover:bg-destructive/90' : ''}
+              size="lg"
+            >
+              <Navigation className="h-5 w-5 mr-2" />
+              {isNavigating ? 'Stop Navigation' : 'Start Navigation'}
+            </Button>
+          </div>
         </div>
 
         {/* Route Info Cards */}

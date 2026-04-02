@@ -14,16 +14,277 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      bookings: {
+        Row: {
+          booked_at: string
+          bus_id: string
+          id: string
+          seat_number: number
+          status: string
+          stop_id: string | null
+          student_id: string
+        }
+        Insert: {
+          booked_at?: string
+          bus_id: string
+          id?: string
+          seat_number: number
+          status?: string
+          stop_id?: string | null
+          student_id: string
+        }
+        Update: {
+          booked_at?: string
+          bus_id?: string
+          id?: string
+          seat_number?: number
+          status?: string
+          stop_id?: string | null
+          student_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bookings_bus_id_fkey"
+            columns: ["bus_id"]
+            isOneToOne: false
+            referencedRelation: "buses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_stop_id_fkey"
+            columns: ["stop_id"]
+            isOneToOne: false
+            referencedRelation: "route_stops"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      buses: {
+        Row: {
+          booked_seats: number
+          bus_number: string
+          capacity: number
+          created_at: string
+          current_lat: number | null
+          current_lng: number | null
+          driver_id: string | null
+          id: string
+          is_active: boolean
+          route_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          booked_seats?: number
+          bus_number: string
+          capacity?: number
+          created_at?: string
+          current_lat?: number | null
+          current_lng?: number | null
+          driver_id?: string | null
+          id?: string
+          is_active?: boolean
+          route_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          booked_seats?: number
+          bus_number?: string
+          capacity?: number
+          created_at?: string
+          current_lat?: number | null
+          current_lng?: number | null
+          driver_id?: string | null
+          id?: string
+          is_active?: boolean
+          route_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "buses_route_id_fkey"
+            columns: ["route_id"]
+            isOneToOne: false
+            referencedRelation: "routes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      driver_locations: {
+        Row: {
+          driver_id: string
+          id: string
+          lat: number
+          lng: number
+          updated_at: string
+        }
+        Insert: {
+          driver_id: string
+          id?: string
+          lat: number
+          lng: number
+          updated_at?: string
+        }
+        Update: {
+          driver_id?: string
+          id?: string
+          lat?: number
+          lng?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          college_id: string | null
+          created_at: string
+          email: string
+          full_name: string
+          id: string
+          profile_image: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          college_id?: string | null
+          created_at?: string
+          email: string
+          full_name: string
+          id?: string
+          profile_image?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          college_id?: string | null
+          created_at?: string
+          email?: string
+          full_name?: string
+          id?: string
+          profile_image?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      route_stops: {
+        Row: {
+          created_at: string
+          id: string
+          lat: number
+          lng: number
+          name: string
+          pickup_time: string
+          route_id: string
+          stop_order: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          lat: number
+          lng: number
+          name: string
+          pickup_time: string
+          route_id: string
+          stop_order: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          lat?: number
+          lng?: number
+          name?: string
+          pickup_time?: string
+          route_id?: string
+          stop_order?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "route_stops_route_id_fkey"
+            columns: ["route_id"]
+            isOneToOne: false
+            referencedRelation: "routes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      routes: {
+        Row: {
+          college_lat: number
+          college_lng: number
+          created_at: string
+          direction: string
+          drop_time: string
+          id: string
+          name: string
+          start_time: string
+          updated_at: string
+        }
+        Insert: {
+          college_lat?: number
+          college_lng?: number
+          created_at?: string
+          direction?: string
+          drop_time: string
+          id?: string
+          name: string
+          start_time: string
+          updated_at?: string
+        }
+        Update: {
+          college_lat?: number
+          college_lng?: number
+          created_at?: string
+          direction?: string
+          drop_time?: string
+          id?: string
+          name?: string
+          start_time?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_driver_bus_id: { Args: { _driver_id: string }; Returns: string }
+      has_booking_for_bus: {
+        Args: { _bus_id: string; _user_id: string }
+        Returns: boolean
+      }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
+      student_has_booking_for_driver: {
+        Args: { _driver_id: string; _student_id: string }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "student" | "driver"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +411,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "student", "driver"],
+    },
   },
 } as const

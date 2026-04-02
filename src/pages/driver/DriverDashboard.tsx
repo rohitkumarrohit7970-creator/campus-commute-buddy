@@ -13,11 +13,14 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { useState } from 'react';
+import { useDriverLocation } from '@/hooks/useDriverLocation';
 
 const DriverDashboard = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [isNavigating, setIsNavigating] = useState(false);
+  const [isSharingLocation, setIsSharingLocation] = useState(false);
+  const { currentLocation } = useDriverLocation(isSharingLocation);
   
   // Find the bus assigned to this driver
   const assignedBus = mockBuses.find(b => b.driverId === user?.id) || mockBuses[0];
@@ -33,10 +36,26 @@ const DriverDashboard = () => {
             <h1 className="text-3xl font-bold">Driver Dashboard</h1>
             <p className="text-muted-foreground">Welcome, {user?.name}</p>
           </div>
-          <Badge className="w-fit bg-success text-success-foreground text-sm py-1.5 px-4">
-            <span className="animate-pulse mr-2">●</span>
-            On Duty
-          </Badge>
+          <div className="flex gap-2">
+            <Button
+              variant={isSharingLocation ? "destructive" : "default"}
+              onClick={() => {
+                setIsSharingLocation(prev => !prev);
+                if (!isSharingLocation) {
+                  toast.success('Location sharing started! Students can now track your bus.');
+                } else {
+                  toast.info('Location sharing stopped.');
+                }
+              }}
+            >
+              <Navigation className="h-4 w-4 mr-2" />
+              {isSharingLocation ? 'Stop Sharing Location' : 'Share Live Location'}
+            </Button>
+            <Badge className="w-fit bg-success text-success-foreground text-sm py-1.5 px-4">
+              <span className="animate-pulse mr-2">●</span>
+              On Duty
+            </Badge>
+          </div>
         </div>
 
         {/* Quick Stats */}
