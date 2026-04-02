@@ -12,6 +12,8 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { getRecommendedBuses, mockRoutes } from '@/data/mockData';
 import { toast } from 'sonner';
 import { RouteDirection } from '@/types/bus';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/contexts/AuthContext';
 
 const SCHEDULE_TABS: { value: RouteDirection; label: string; icon: React.ElementType; desc: string }[] = [
   { value: 'morning_to_college', label: 'Morning Pickup', icon: Sunrise, desc: 'Home → GEU (7-8 AM)' },
@@ -21,11 +23,13 @@ const SCHEDULE_TABS: { value: RouteDirection; label: string; icon: React.Element
 ];
 
 const BookSeat = () => {
+  const { user } = useAuth();
   const [selectedRoute, setSelectedRoute] = useState('');
   const [bookingDialog, setBookingDialog] = useState(false);
   const [selectedBus, setSelectedBus] = useState<any>(null);
   const [selectedStop, setSelectedStop] = useState('');
   const [direction, setDirection] = useState<RouteDirection>('morning_to_college');
+  const [isBooking, setIsBooking] = useState(false);
 
   const filteredRoutes = mockRoutes.filter(r => r.direction === direction);
   const recommendedBuses = selectedRoute ? getRecommendedBuses(selectedRoute) : [];
@@ -37,15 +41,53 @@ const BookSeat = () => {
     setBookingDialog(true);
   };
 
-  const confirmBooking = () => {
+  const confirmBooking = async () => {
     if (!selectedStop) {
       toast.error('Please select a pickup stop');
       return;
     }
-    toast.success(`Seat booked successfully on ${selectedBus.busNumber}!`);
-    setBookingDialog(false);
-    setSelectedBus(null);
-    setSelectedStop('');
+    if (!user?.id || !selectedBus) return;
+
+    setIsBooking(true);
+    try {
+      // Create the booking
+      const seatNumber = selectedBus.bookedSeats + 1;
+      const { data: bookingData, error: bookingError } = await supabase
+        .from('bookings')
+        .insert({
+          student_id: user.id,
+          bus_id: selectedBus.id,
+          stop_id: selectedStop,
+          seat_number: seatNumber,
+          status: 'active',
+        })
+        .select()
+        .single();
+
+      if (bookingError) throw bookingError;
+
+      // Send notification to the driver if bus has a driver assigned
+      if (selectedBus.driverId) {
+        const stopName = selectedBus.route?.stops?.find((s: any) => s.id === selectedStop)?.name || 'Unknown stop';
+        await supabase.from('notifications').insert({
+          recipient_id: selectedBus.driverId,
+          type: 'booking',
+          title: 'New Seat Booking!',
+          message: `${user.name} booked seat #${seatNumber} on ${selectedBus.busNumber} (Stop: ${stopName})`,
+          related_bus_id: selectedBus.id,
+          related_booking_id: bookingData.id,
+        });
+      }
+
+      toast.success(`Seat booked successfully on ${selectedBus.busNumber}!`);
+      setBookingDialog(false);
+      setSelectedBus(null);
+      setSelectedStop('');
+    } catch (err: any) {
+      toast.error(err.message || 'Failed to book seat');
+    } finally {
+      setIsBooking(false);
+    }
   };
 
   return (
@@ -164,8 +206,12 @@ const BookSeat = () => {
               </Select>
             </div>
             <div className="flex gap-3 pt-4">
-              <Button variant="outline" className="flex-1" onClick={() => setBookingDialog(false)}>Cancel</Button>
-              <Button className="flex-1 gradient-primary text-primary-foreground" onClick={confirmBooking}>Confirm Booking</Button>
+              <Button variant="outline" className="flex-1" onClick={() => setBookingDialog(false)} disabled={isBooking}>
+                Cancel
+              </Button>
+              <Button className="flex-1 gradient-primary text-primary-foreground" onClick={confirmBooking} disabled={isBooking}>
+                {isBooking ? 'Booking...' : 'Confirm Booking'}
+              </Button>
             </div>
           </div>
         </DialogContent>
