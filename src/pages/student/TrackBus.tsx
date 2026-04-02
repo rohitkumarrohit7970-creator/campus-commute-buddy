@@ -1,34 +1,88 @@
-import React, { useState, useMemo } from 'react';
-import { MapPin, Bus, Clock, Users, Radio } from 'lucide-react';
+import React, { useMemo } from 'react';
+import { MapPin, Bus, Clock, Users, Radio, AlertCircle } from 'lucide-react';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { BusMap } from '@/components/map/BusMap';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Label } from '@/components/ui/label';
-import { getBusesWithDetails } from '@/data/mockData';
+import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useRealtimeDriverLocation } from '@/hooks/useRealtimeDriverLocation';
+import { useStudentBooking } from '@/hooks/useStudentBooking';
+import { useNavigate } from 'react-router-dom';
 
 const TrackBus = () => {
-  const allBuses = getBusesWithDetails();
-  const activeBuses = allBuses.filter(b => b.isActive);
-  const [selectedBusId, setSelectedBusId] = useState('');
-  const selectedBus = activeBuses.find(b => b.id === selectedBusId);
+  const { booking, loading } = useStudentBooking();
+  const navigate = useNavigate();
 
-  // Get driver IDs for real-time location tracking
-  const driverIds = useMemo(() => 
-    activeBuses.map(b => b.driverId).filter(Boolean) as string[], 
-    [activeBuses]
-  );
+  // Get driver ID for real-time location tracking
+  const driverIds = useMemo(() => {
+    if (booking?.bus?.driver_id) return [booking.bus.driver_id];
+    return [];
+  }, [booking?.bus?.driver_id]);
+
   const driverLocations = useRealtimeDriverLocation(driverIds);
+
+  if (loading) {
+    return (
+      <DashboardLayout>
+        <div className="flex items-center justify-center h-64">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+        </div>
+      </DashboardLayout>
+    );
+  }
+
+  if (!booking || !booking.bus) {
+    return (
+      <DashboardLayout>
+        <div className="space-y-6">
+          <div>
+            <h1 className="text-3xl font-bold">Track Bus</h1>
+            <p className="text-muted-foreground">View live location of your booked bus</p>
+          </div>
+          <Card>
+            <CardContent className="flex flex-col items-center justify-center py-16 space-y-4">
+              <AlertCircle className="h-12 w-12 text-muted-foreground" />
+              <h3 className="text-lg font-semibold">No Active Booking</h3>
+              <p className="text-muted-foreground text-center max-w-md">
+                You need to book a seat on a bus first to track its live location. 
+                Only the bus you've booked will be shown here for tracking.
+              </p>
+              <Button onClick={() => navigate('/student/book')} className="gradient-primary text-primary-foreground">
+                Book a Seat
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+      </DashboardLayout>
+    );
+  }
+
+  const bus = booking.bus;
+  const route = booking.route;
+  const driverLocation = bus.driver_id ? driverLocations[bus.driver_id] : null;
+
+  const mapBus = {
+    id: bus.id,
+    busNumber: bus.bus_number,
+    capacity: bus.capacity,
+    bookedSeats: bus.booked_seats,
+    routeId: bus.route_id || '',
+    driverId: bus.driver_id || undefined,
+    currentLocation: driverLocation
+      ? { lat: driverLocation.lat, lng: driverLocation.lng }
+      : bus.current_lat && bus.current_lng
+        ? { lat: bus.current_lat, lng: bus.current_lng }
+        : undefined,
+    isActive: bus.is_active,
+  };
 
   return (
     <DashboardLayout>
       <div className="space-y-6">
         <div>
           <h1 className="text-3xl font-bold">Track Bus</h1>
-          <p className="text-muted-foreground">View live locations of all active buses</p>
+          <p className="text-muted-foreground">Live location of your booked bus</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -42,10 +96,8 @@ const TrackBus = () => {
               </CardHeader>
               <CardContent>
                 <BusMap
-                  buses={activeBuses.map(b => ({
-                    id: b.id, busNumber: b.busNumber, capacity: b.capacity, bookedSeats: b.bookedSeats,
-                    routeId: b.routeId, driverId: b.driverId, currentLocation: b.currentLocation, isActive: b.isActive,
-                  }))}
+                  buses={[mapBus]}
+                  selectedBusId={bus.id}
                   className="h-[400px]"
                 />
               </CardContent>
@@ -55,97 +107,61 @@ const TrackBus = () => {
           <div className="space-y-4">
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">Select a Bus</CardTitle>
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-lg flex items-center gap-2">
+                    <Bus className="h-5 w-5 text-primary" />
+                    {bus.bus_number}
+                  </CardTitle>
+                  <Badge className={bus.is_active ? "bg-success" : "bg-muted"}>
+                    {bus.is_active ? 'Active' : 'Inactive'}
+                  </Badge>
+                </div>
               </CardHeader>
-              <CardContent>
-                <Label>Filter by Bus</Label>
-                <Select value={selectedBusId} onValueChange={setSelectedBusId}>
-                  <SelectTrigger className="mt-2">
-                    <SelectValue placeholder="Choose a bus to track" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {activeBuses.map(bus => (
-                      <SelectItem key={bus.id} value={bus.id}>
-                        {bus.busNumber} - {bus.route?.name || 'No route'}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </CardContent>
-            </Card>
-
-            {selectedBus && (
-              <Card>
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="text-lg flex items-center gap-2">
-                      <Bus className="h-5 w-5 text-primary" />
-                      {selectedBus.busNumber}
-                    </CardTitle>
-                    <Badge className="bg-success">Active</Badge>
-                  </div>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  {/* Real-time location indicator */}
-                  {selectedBus.driverId && driverLocations[selectedBus.driverId] && (
-                    <div className="flex items-center gap-2 text-sm p-2 bg-success/10 rounded-lg">
-                      <Radio className="h-4 w-4 text-success animate-pulse" />
-                      <span className="font-medium text-success">Live Location Active</span>
-                      <span className="text-xs text-muted-foreground ml-auto">
-                        Updated {new Date(driverLocations[selectedBus.driverId].updated_at).toLocaleTimeString()}
-                      </span>
-                    </div>
-                  )}
-                  <div className="flex items-center gap-2 text-sm">
-                    <MapPin className="h-4 w-4 text-muted-foreground" />
-                    <span className="text-muted-foreground">Route:</span>
-                    <span className="font-medium">{selectedBus.route?.name}</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-sm">
-                    <Clock className="h-4 w-4 text-muted-foreground" />
-                    <span className="text-muted-foreground">Schedule:</span>
-                    <span className="font-medium">{selectedBus.route?.startTime} - {selectedBus.route?.dropTime}</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-sm">
-                    <Users className="h-4 w-4 text-muted-foreground" />
-                    <span className="text-muted-foreground">Seats:</span>
-                    <span className={cn("font-medium", selectedBus.vacantSeats > 10 ? "text-success" : "text-warning")}>
-                      {selectedBus.vacantSeats}/{selectedBus.capacity} available
+              <CardContent className="space-y-3">
+                {/* Real-time location indicator */}
+                {driverLocation && (
+                  <div className="flex items-center gap-2 text-sm p-2 bg-success/10 rounded-lg">
+                    <Radio className="h-4 w-4 text-success animate-pulse" />
+                    <span className="font-medium text-success">Live Location Active</span>
+                    <span className="text-xs text-muted-foreground ml-auto">
+                      Updated {new Date(driverLocation.updated_at).toLocaleTimeString()}
                     </span>
                   </div>
-                  {selectedBus.driver && (
-                    <div className="flex items-center gap-2 text-sm">
-                      <Users className="h-4 w-4 text-muted-foreground" />
-                      <span className="text-muted-foreground">Driver:</span>
-                      <span className="font-medium">{selectedBus.driver.name}</span>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            )}
+                )}
 
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Active Buses</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
-                  {activeBuses.map(bus => (
-                    <div
-                      key={bus.id}
-                      className={cn(
-                        "flex items-center justify-between p-3 rounded-lg cursor-pointer transition-colors",
-                        selectedBusId === bus.id ? "bg-primary/10 border border-primary/20" : "bg-muted/50 hover:bg-muted"
-                      )}
-                      onClick={() => setSelectedBusId(bus.id)}
-                    >
-                      <div>
-                        <p className="font-medium text-sm">{bus.busNumber}</p>
-                        <p className="text-xs text-muted-foreground">{bus.route?.name}</p>
-                      </div>
-                      <span className="text-xs font-medium text-success">{bus.vacantSeats} seats</span>
+                {!driverLocation && (
+                  <div className="flex items-center gap-2 text-sm p-2 bg-muted/50 rounded-lg">
+                    <Radio className="h-4 w-4 text-muted-foreground" />
+                    <span className="text-muted-foreground">Driver location not available yet</span>
+                  </div>
+                )}
+
+                {route && (
+                  <>
+                    <div className="flex items-center gap-2 text-sm">
+                      <MapPin className="h-4 w-4 text-muted-foreground" />
+                      <span className="text-muted-foreground">Route:</span>
+                      <span className="font-medium">{route.name}</span>
                     </div>
-                  ))}
+                    <div className="flex items-center gap-2 text-sm">
+                      <Clock className="h-4 w-4 text-muted-foreground" />
+                      <span className="text-muted-foreground">Schedule:</span>
+                      <span className="font-medium">{route.start_time} - {route.drop_time}</span>
+                    </div>
+                  </>
+                )}
+
+                <div className="flex items-center gap-2 text-sm">
+                  <Users className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-muted-foreground">Seats:</span>
+                  <span className={cn("font-medium", (bus.capacity - bus.booked_seats) > 10 ? "text-success" : "text-warning")}>
+                    {bus.capacity - bus.booked_seats}/{bus.capacity} available
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-2 text-sm pt-2 border-t">
+                  <span className="text-muted-foreground">Your Seat:</span>
+                  <Badge variant="outline">#{booking.seat_number}</Badge>
                 </div>
               </CardContent>
             </Card>
