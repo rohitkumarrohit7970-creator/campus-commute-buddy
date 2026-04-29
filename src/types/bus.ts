@@ -1,0 +1,68 @@
+export type UserRole = 'admin' | 'student' | 'driver';
+
+export interface User {
+  id: string;
+  email: string;
+  role: UserRole;
+  name: string;
+  collegeId?: string;
+  profileImage?: string;
+}
+
+export interface Bus {
+  id: string;
+  busNumber: string;
+  capacity: number;
+  bookedSeats: number;
+  routeId: string;
+  driverId?: string;
+  currentLocation?: {
+    lat: number;
+    lng: number;
+  };
+  isActive: boolean;
+  progressStep?: number;
+  lastUpdated?: string;
+}
+
+export type RouteDirection = 'morning_to_college' | 'afternoon_from_college' | 'afternoon_to_college' | 'afternoon_drop_from_college';
+
+export interface Route {
+  id: string;
+  name: string;
+  stops: Stop[];
+  startTime: string;
+  dropTime: string;
+  direction: RouteDirection;
+  collegeLocation: {
+    lat: number;
+    lng: number;
+  };
+}
+
+export interface Stop {
+  id: string;
+  name: string;
+  pickupTime: string;
+  order: number;
+  location: {
+    lat: number;
+    lng: number;
+  };
+}
+
+export interface Booking {
+  id: string;
+  studentId: string;
+  busId: string;
+  stopId: string;
+  seatNumber: number;
+  bookedAt: string;
+  status: 'active' | 'cancelled';
+}
+
+export interface BusWithDetails extends Bus {
+  route?: Route;
+  driver?: User;
+  vacantSeats: number;
+}
